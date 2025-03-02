@@ -22,7 +22,7 @@ $router->group(['prefix' => 'auth'], function () use ($router) {
 
 $router->group(['prefix' => 'article'], function () use ($router) {
     $router->post('create', 'ArticleController@create');
-    $router->put('update/{id}', 'ArticleController@update');
+    $router->post('update/{id}', 'ArticleController@update');
     $router->delete('delete/{id}', 'ArticleController@delete');
     $router->get('list/{page}/{limit}', 'ArticleController@list');
     $router->get('detail/{id}', 'ArticleController@detail');
