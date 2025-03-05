@@ -2,23 +2,18 @@
 
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class Article extends Model
+class Banner extends Model
 {
     // use Authenticatable, Authorizable, HasFactory;
-    protected $table = 'article';
+    protected $table = 'banner';
     // /**
     //  * The attributes that are mass assignable.
     //  *
     //  * @var string[]
     //  */
     protected $fillable = [
-        'title',
         'image',
-        'author',
-        'description',
-        'content',
-        'is_deleted',
-        'created_at'
+        'banner',
     ];
 
     // /**

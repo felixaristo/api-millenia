@@ -15,7 +15,7 @@ class ArticleController extends Controller
      *
      * @return void
      */
-    public $baseFolder = 'article';
+    public $baseFolder = 'public/article';
 
     public function __construct()
     {
@@ -51,20 +51,22 @@ class ArticleController extends Controller
         $article->title = $request->input('title');
         
         // upload
-        $upload = $this->upload($request->file('image'), $article->image);
+        if($request->file('image')){
+            $upload = $this->upload($request->file('image'), $article->image);
+            $article->image = $upload;
+        }
         
-        $article->image = $upload;
         $article->author = $request->input('author');
         $article->description = $request->input('description');
         $article->content = $request->input('content');
         $article->is_deleted = 0;
         $article->save();
 
-        if($upload){
+        // if($upload){
             return response()->json(["code" => 200, "message" => "Article successfully updated!"]);
-        }else{
-            return response()->json(["code" => 400, "message" => "Article update trouble, please contact Administrator!"]);
-        }
+        // }else{
+        //     return response()->json(["code" => 400, "message" => "Article update trouble, please contact Administrator!"]);
+        // }
     }
 
     public function delete(Request $request, $id)
@@ -87,22 +89,50 @@ class ArticleController extends Controller
     public function list(Request $request, $page, $limit)
     {
         $start = $limit * ($page-1);
-        $article = Article::select('id', 'title', 'description', 'image', 'author', 'content', 'created_at')
-                        ->where("is_deleted", "=", 0)
+        $article = Article::select('article.id', 'article.title', 'article.description', 'article.image', 'user.username as author', 'article.content', 'article.created_at')
+                        ->join('user', 'user.id', '=', 'article.author')
+                        ->where("article.is_deleted", "=", 0)
+                        ->orderBy('article.id', 'DESC')
                         ->offset($start)
                         ->limit($limit)
                         ->get();
         foreach($article as $d){
             $d->image = str_replace('index.php', '', url()) . $this->baseFolder . '/' . $d->image;
+            $d->author = ucfirst($d->author);
+            $temp = strval($d->created_at);
+            $d->created_string = explode('T', $temp)[0];
         }
         return response()->json(["status" => "success", "data" => $article]);
     }
 
     public function detail(Request $request, $id)
     {
-        $article = Article::find($id);
-        // $article->delete();
+        $article = Article::select('article.id', 'article.title', 'article.description', 'article.image', 'user.username as author', 'article.content', 'article.created_at')
+                        ->join('user', 'user.id', '=', 'article.author')
+                        ->where("article.id", "=", $id)
+                        ->get();
+        $article = $article[0];
         $article->image = str_replace('index.php', '', url()) . $this->baseFolder . '/' . $article->image;
+        $article->author = ucfirst($article->author);
+        $temp = strval($article->created_at);
+        $article->created_string = explode('T', $temp)[0];
+        return response()->json(["status" => "success", "data" => $article]);
+    }
+
+    public function other(Request $request, $id)
+    {
+        $article = Article::select('article.id', 'article.title', 'article.description', 'article.image', 'user.username as author', 'article.content', 'article.created_at')
+                        ->join('user', 'user.id', '=', 'article.author')
+                        ->where("article.id", "!=", $id)
+                        ->orderBy('article.id', 'DESC')
+                        ->get();
+        
+        foreach($article as $d){
+            $d->image = str_replace('index.php', '', url()) . $this->baseFolder . '/' . $d->image;
+            $d->author = ucfirst($d->author);
+            $temp = strval($d->created_at);
+            $d->created_string = explode('T', $temp)[0];
+        }
         return response()->json(["status" => "success", "data" => $article]);
     }
 

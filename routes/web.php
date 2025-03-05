@@ -26,4 +26,13 @@ $router->group(['prefix' => 'article'], function () use ($router) {
     $router->delete('delete/{id}', 'ArticleController@delete');
     $router->get('list/{page}/{limit}', 'ArticleController@list');
     $router->get('detail/{id}', 'ArticleController@detail');
+    $router->get('other/{id}', 'ArticleController@other');
+});
+
+$router->group(['prefix' => 'banner'], function () use ($router) {
+    $router->post('create', 'BannerController@create');
+    $router->post('update/{id}', 'BannerController@update');
+    $router->delete('delete/{id}', 'BannerController@delete');
+    $router->get('list/{page}/{limit}', 'BannerController@list');
+    $router->get('detail/{id}', 'BannerController@detail');
 });
