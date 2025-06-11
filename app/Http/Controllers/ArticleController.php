@@ -92,10 +92,17 @@ class ArticleController extends Controller
         $article = Article::select('article.id', 'article.title', 'article.description', 'article.image', 'user.username as author', 'article.content', 'article.created_at')
                         ->join('user', 'user.id', '=', 'article.author')
                         ->where("article.is_deleted", "=", 0)
-                        ->orderBy('article.id', 'DESC')
-                        ->offset($start)
-                        ->limit($limit)
-                        ->get();
+                        ->orderBy('article.id', 'DESC');
+
+        if($page != '0' && $limit != '0'){
+            $article = $article
+                    ->offset($start)
+                    ->limit($limit)
+                    ->get();
+        }else{
+            $article = $article->get();
+        }
+        
         foreach($article as $d){
             $d->image = str_replace('index.php', '', url()) . $this->baseFolder . '/' . $d->image;
             $d->author = ucfirst($d->author);
