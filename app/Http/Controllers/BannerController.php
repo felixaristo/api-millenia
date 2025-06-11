@@ -28,6 +28,7 @@ class BannerController extends Controller
         $filename = time() . '.jpg';
         $banner->image = $filename;
         $banner->article = $request->input('article');
+        $banner->order = $request->input('order');
         $banner->save();
         
         // upload
@@ -49,6 +50,7 @@ class BannerController extends Controller
         
         $banner->image = $upload;
         $banner->article = $request->input('article');
+        $banner->order = $request->input('order');
         $banner->save();
 
         if($upload){
@@ -84,9 +86,12 @@ class BannerController extends Controller
             $banner = $banner
                     ->offset($start)
                     ->limit($limit)
+                    ->orderBy('order', 'ASC')
                     ->get();
         }else{
-            $banner = $banner->get();
+            $banner = $banner
+                    ->orderBy('order', 'ASC')
+                    ->get();
         }
                         
         foreach($banner as $d){
