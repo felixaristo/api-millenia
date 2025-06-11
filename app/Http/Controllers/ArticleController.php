@@ -99,7 +99,7 @@ class ArticleController extends Controller
                         ->limit($limit)
                         ->get();
         }else{
-            $article = Article::select('article.id', 'article.title')
+            $article = Article::select('article.id as value', 'article.title as text')
                         ->where("article.is_deleted", "=", 0)
                         ->orderBy('article.id', 'DESC')
                         ->get();
