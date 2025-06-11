@@ -78,10 +78,17 @@ class BannerController extends Controller
     public function list(Request $request, $page, $limit)
     {
         $start = $limit * ($page-1);
-        $banner = Banner::select('id', 'image', 'article')
-                        ->offset($start)
-                        ->limit($limit)
-                        ->get();
+        $banner = Banner::select('id', 'image', 'article');
+                        
+        if($page != '0' && $limit != '0'){
+            $banner = $banner
+                    ->offset($start)
+                    ->limit($limit)
+                    ->get();
+        }else{
+            $banner = $banner->get();
+        }
+                        
         foreach($banner as $d){
             $d->image = str_replace('index.php', '', url()) . $this->baseFolder . '/' . $d->image;
         }
