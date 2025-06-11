@@ -80,16 +80,17 @@ class BannerController extends Controller
     public function list(Request $request, $page, $limit)
     {
         $start = $limit * ($page-1);
-        $banner = Banner::select('id', 'image', 'article');
+        
                         
         if($page != '0' && $limit != '0'){
-            $banner = $banner
+            $banner = Banner::select('banner.id', 'banner.image', 'banner.article', 'article.title')
+                    ->join('article', 'article.id', '=', 'banner.article')
                     ->offset($start)
                     ->limit($limit)
                     ->orderBy('order', 'ASC')
                     ->get();
         }else{
-            $banner = $banner
+            $banner = Banner::select('id', 'image', 'article')
                     ->orderBy('order', 'ASC')
                     ->get();
         }
