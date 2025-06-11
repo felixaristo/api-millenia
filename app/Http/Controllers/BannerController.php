@@ -83,7 +83,7 @@ class BannerController extends Controller
         
                         
         if($page != '0' && $limit != '0'){
-            $banner = Banner::select('banner.id', 'banner.image', 'banner.article', 'article.title')
+            $banner = Banner::select('banner.id', 'banner.image', 'article.title as article')
                     ->join('article', 'article.id', '=', 'banner.article')
                     ->offset($start)
                     ->limit($limit)
