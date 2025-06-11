@@ -90,7 +90,6 @@ class ArticleController extends Controller
     {
         $start = $limit * ($page-1);
         
-
         if($page != '0' && $limit != '0'){
             $article = Article::select('article.id', 'article.title', 'article.description', 'article.image', 'user.username as author', 'article.content', 'article.created_at')
                         ->join('user', 'user.id', '=', 'article.author')
@@ -107,10 +106,12 @@ class ArticleController extends Controller
         }
 
         foreach($article as $d){
-            $d->image = str_replace('index.php', '', url()) . $this->baseFolder . '/' . $d->image;
-            $d->author = ucfirst($d->author);
-            $temp = strval($d->created_at);
-            $d->created_string = explode('T', $temp)[0];
+            if(isset($d->image)){
+                $d->image = str_replace('index.php', '', url()) . $this->baseFolder . '/' . $d->image;
+                $d->author = ucfirst($d->author);
+                $temp = strval($d->created_at);
+                $d->created_string = explode('T', $temp)[0];
+            }
         }
         return response()->json(["status" => "success", "data" => $article]);
     }
