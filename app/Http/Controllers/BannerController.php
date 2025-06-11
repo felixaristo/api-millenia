@@ -45,19 +45,35 @@ class BannerController extends Controller
     {
         $banner = Banner::find($id);
 
-        // upload
-        $upload = $this->upload($request->file('image'), $banner->image);
+
+        // $article->title = $request->input('title');
         
-        $banner->image = $upload;
+        // upload
+        if($request->file('image')){
+            $upload = $this->upload($request->file('image'), $banner->image);
+            $banner->image = $upload;
+        }
+        
+        // $article->author = $request->input('author');
+        // $article->description = $request->input('description');
+        // $article->content = $request->input('content');
+        // $article->is_deleted = 0;
+        // $article->save();
+
+
+        // upload
+        
+        
+        // $banner->image = $upload;
         $banner->article = $request->input('article');
         $banner->order = $request->input('order');
         $banner->save();
 
-        if($upload){
+        // if($upload){
             return response()->json(["code" => 200, "message" => "Banner successfully updated!"]);
-        }else{
-            return response()->json(["code" => 400, "message" => "Banner update trouble, please contact Administrator!"]);
-        }
+        // }else{
+        //     return response()->json(["code" => 400, "message" => "Banner update trouble, please contact Administrator!"]);
+        // }
     }
 
     public function delete(Request $request, $id)
