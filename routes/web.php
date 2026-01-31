@@ -36,3 +36,14 @@ $router->group(['prefix' => 'banner'], function () use ($router) {
     $router->get('list/{page}/{limit}', 'BannerController@list');
     $router->get('detail/{id}', 'BannerController@detail');
 });
+
+
+$router->group(['prefix' => 'event'], function () use ($router) {
+    $router->post('register', 'EventController@register');
+    $router->get('list/{page}/{limit}', 'EventController@list');
+    // $router->get('detail/{id}', 'EventController@detail');
+});
+
+$router->group(['prefix' => 'health'], function () use ($router) {
+    $router->get('check', 'HealthController@check');
+});
